@@ -1,55 +1,73 @@
 import React, { useContext } from "react";
-import ListGroup from 'react-bootstrap/ListGroup';
+import Button from "react-bootstrap/Button";
 import { myContext } from "../myContextPizza";
-import Button from 'react-bootstrap/Button';
+import "../App.css"; 
 
 const Carrito = () => {
-    const { cart, setCart } = useContext(myContext);
+  const { cart, setCart } = useContext(myContext);
 
-    const changeAmount = (ac, id, am) => {
-        setCart((item) =>
-            item.map((obj) => {
-                if (obj.idProduct === id) {
-                    if (ac === "increase") {
-                        return { ...obj, amount: am * 1 + 1 };
-                    } else if (ac === "diminish" && am > 1) {
-                        return { ...obj, amount: am * 1 - 1 };
-                    }
-                }
-                return obj;
-            })
-        );
-    };
-    return (
-        <div className="container w-75 border p-3 mt-5">
-            <h4>Detalles del pedido:</h4>
-            {cart.map(item =>
-                <ListGroup key={item.id}>
-                    <ListGroup.Item className="mt-1 d-flex  justify-content-between">
-                        <div>
-                            <img src={item.img} width='50px' height='40px' alt="Pizza" />
-                            <strong className="ms-2">{item.name.replace(/^./, item.name[0].toUpperCase())}</strong>
-                        </div>
-                        <div>
-                            <strong className="mx-2">${item.price * item.amount}</strong>
-                            <Button onClick={() => changeAmount("diminish", item.idProduct, item.amount)} variant="danger">-</Button>
-                            <strong className="mx-2">{item.amount}</strong>
-                            <Button onClick={() => changeAmount("increase", item.idProduct, item.amount)} variant="primary">+</Button>
-                        </div>
-                    </ListGroup.Item>
-                </ListGroup>
-            )
-            }
-            <hr />
-            <h2>Total: $
-                {cart
-                    .map((item) => item.price * item.amount)
-                    .reduce((a,b) => a + b, 0)
-                }
-            </h2>
-            <Button variant="success">Ir a pagar</Button>
-        </div>
-    )
-}
+  const changeAmount = (action, id, amount) => {
+    setCart((items) =>
+      items.map((obj) => {
+        if (obj.idProduct === id) {
+          if (action === "increase") {
+            return { ...obj, amount: amount + 1 };
+          } else if (action === "diminish" && amount > 1) {
+            return { ...obj, amount: amount - 1 };
+          }
+        }
+        return obj;
+      })
+    );
+  };
 
-export default Carrito
+  const total = cart
+    .map((item) => item.price * item.amount)
+    .reduce((a, b) => a + b, 0);
+
+  return (
+    <div className="cart-container">
+      <h2 className="text-center mb-4 text-light">🛒 Detalles del pedido</h2>
+
+      <div className="cart-items">
+        {cart.map((item, index) => (
+          <div key={item.idProduct || index} className="cart-card">
+            <img src={item.img} alt={item.name} />
+            <h5>{item.name.replace(/^./, item.name[0].toUpperCase())}</h5>
+            <p>Precio: ${item.price}</p>
+            <div className="d-flex justify-content-center align-items-center gap-3 mt-2">
+              <Button
+                variant="danger"
+                onClick={() =>
+                  changeAmount("diminish", item.idProduct, item.amount)
+                }
+              >
+                -
+              </Button>
+              <strong>{item.amount}</strong>
+              <Button
+                variant="primary"
+                onClick={() =>
+                  changeAmount("increase", item.idProduct, item.amount)
+                }
+              >
+                +
+              </Button>
+            </div>
+            <h6 className="mt-3">Subtotal: ${item.price * item.amount}</h6>
+          </div>
+        ))}
+      </div>
+
+      <hr className="text-light" />
+      <h2 className="text-center text-light mt-3">Total: ${total}</h2>
+      <div className="text-center mt-3">
+        <Button variant="success" size="lg">
+          Ir a pagar 💳
+        </Button>
+      </div>
+    </div>
+  );
+};
+
+export default Carrito;
