@@ -4,22 +4,8 @@ import { myContext } from "../myContextPizza";
 import "../App.css"; 
 
 const Carrito = () => {
-  const { cart, setCart } = useContext(myContext);
+const { cart, increaseAmount, decreaseAmount } = useContext(myContext);
 
-  const changeAmount = (action, id, amount) => {
-    setCart((items) =>
-      items.map((obj) => {
-        if (obj.idProduct === id) {
-          if (action === "increase") {
-            return { ...obj, amount: amount + 1 };
-          } else if (action === "diminish" && amount > 1) {
-            return { ...obj, amount: amount - 1 };
-          }
-        }
-        return obj;
-      })
-    );
-  };
 
   const total = cart
     .map((item) => item.price * item.amount)
@@ -38,18 +24,15 @@ const Carrito = () => {
             <div className="d-flex justify-content-center align-items-center gap-3 mt-2">
               <Button
                 variant="danger"
-                onClick={() =>
-                  changeAmount("diminish", item.idProduct, item.amount)
-                }
+                 onClick={() => decreaseAmount(item.idProduct)}
+
               >
                 -
               </Button>
               <strong>{item.amount}</strong>
               <Button
                 variant="primary"
-                onClick={() =>
-                  changeAmount("increase", item.idProduct, item.amount)
-                }
+                onClick={() => increaseAmount(item.idProduct)}
               >
                 +
               </Button>

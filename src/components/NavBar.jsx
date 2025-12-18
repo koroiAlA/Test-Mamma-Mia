@@ -2,43 +2,45 @@ import { useContext } from "react";
 import Nav from "react-bootstrap/Nav";
 import NavbarHeader from "react-bootstrap/Navbar";
 import Container from "react-bootstrap/Container";
+import Button from "react-bootstrap/Button";
 import { NavLink } from "react-router-dom";
 import { myContext } from "../myContextPizza";
 
 const Navbar = () => {
-  const { totalPrice, totalItems } = useContext(myContext);
+  const { totalPrice, totalItems, theme, toggleTheme } = useContext(myContext);
 
   return (
-    <NavbarHeader expand="lg" bg="info" variant="dark" sticky="top">
+    <NavbarHeader
+      expand="lg"
+      sticky="top"
+      className={`navbar-${theme}`}
+      variant={theme}
+    >
       <Container>
-        <NavbarHeader.Toggle aria-controls="navbarScroll" />
-        <NavbarHeader.Collapse id="navbarScroll">
+        <NavbarHeader.Toggle />
+        <NavbarHeader.Collapse>
           <Nav className="me-auto">
-            <NavLink
-              style={({ isActive }) => ({
-                color: isActive ? "red" : "white",
-              })}
-              className="text-decoration-none"
-              to="/"
-            >
+            <NavLink to="/" className="text-decoration-none">
               <NavbarHeader.Brand>
                 🍕 Pizzería Mamma Mia!
               </NavbarHeader.Brand>
             </NavLink>
           </Nav>
 
-          <Nav>
-            <NavLink
-              style={({ isActive }) => ({
-                color: isActive ? "red" : "white",
-              })}
-              className="text-decoration-none"
-              to="/carrito"
-            >
+          <Nav className="align-items-center gap-3">
+            <NavLink to="/carrito" className="text-decoration-none">
               <NavbarHeader.Brand>
                 🛒 {totalItems} | 💵 ${totalPrice}
               </NavbarHeader.Brand>
             </NavLink>
+
+            <Button
+              variant="outline-light"
+              onClick={toggleTheme}
+              style={{ borderRadius: "50px" }}
+            >
+              {theme === "dark" ? "☀️ Light" : "🌙 Dark"}
+            </Button>
           </Nav>
         </NavbarHeader.Collapse>
       </Container>

@@ -66,10 +66,17 @@ const Home = () => {
       </div>
 
       <Container className="mt-5">
-        <Row xs={1} md={4} className="g-4">
+        <Row className="g-4">
           {pizza.map((item) => (
-            <Col key={item.id}>
-              <Card style={glassCard}>
+            <Col key={item.id} xs={12} md={6} lg={4}>
+              <Card
+                style={{
+                  ...glassCard,
+                  height: "100%",
+                  transition: "transform 0.35s ease, box-shadow 0.35s ease",
+                }}
+                className="glass-card"
+              >
                 <Card.Img
                   variant="top"
                   src={item.img}
